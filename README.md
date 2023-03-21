@@ -1,7 +1,6 @@
-## cf-gcs-untar
+# cf-gcs-untar
 ---
-# gcp cloud function to listen for gcs finalize events for objects of type .tar or .tar.gz
-# untar them and write the contents back to the bucket with the prefix /untarred
+## gcp cloud function to listen for gcs finalize events for objects of type .tar or .tar.gz untar them and write the contents back to the bucket with the prefix /untarred
 ---
 
 Google Cloud Storage (GCS) is an object storage service designed for storing, accessing, and managing large amounts of unstructured data. It is not a file system like POSIX, so it doesn't have support for traditional file operations like tarring and untarring directly within the service.
@@ -18,7 +17,7 @@ To perform tar or untar operations on data stored in GCS, you'll need to process
 
 ---
 
-# local testing 
+## local testing 
 
 pip install -r requiremnets.txt
 
@@ -43,7 +42,7 @@ curl -X POST \
     http://localhost:8080
 
 ---
-# deployment
+## deployment
 
 cli deployment to GCP
 change region and bucket appropriately
