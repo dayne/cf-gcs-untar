@@ -9,6 +9,15 @@ storage_client = storage.Client()
 def is_tar_or_tar_gz_file(filename):
     return filename.endswith('.tar') or filename.endswith('.tar.gz')
 
+def get_archive_subdir(filename):
+    # Remove the file extension
+    if filename.endswith('.tar.gz'):
+        return filename[:-7]
+    elif filename.endswith('.tar'):
+        return filename[:-4]
+    else:
+        return None
+
 @functions_framework.cloud_event
 def gcs_untar(cloud_event):
     data = cloud_event.data
@@ -17,6 +26,7 @@ def gcs_untar(cloud_event):
     name = data["name"]
 
     if is_tar_or_tar_gz_file(name):
+        archive_subdir = get_archive_subdir(name)
         source_bucket = storage_client.get_bucket(bucket)
         tar_blob = source_bucket.blob(name)
 
@@ -34,7 +44,7 @@ def gcs_untar(cloud_event):
                     if tar_info.isfile():
                         # Read the file as a stream and upload it directly
                         with tar.extractfile(tar_info) as file_obj:
-                            destination_blob = destination_bucket.blob(f"untarred/{tar_info.name}")
+                            destination_blob = destination_bucket.blob(f"untarred/{archive_subdir}/{tar_info.name}")
                             destination_blob.upload_from_file(file_obj)
 
         print(f"-Successfully untarred and uploaded files from {name} to the destination bucket.")
